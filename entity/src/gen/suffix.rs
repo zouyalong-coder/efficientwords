@@ -3,7 +3,7 @@
 use sea_orm::entity::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
-#[sea_orm(table_name = "prefix")]
+#[sea_orm(table_name = "suffix")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
@@ -11,6 +11,7 @@ pub struct Model {
     pub stem: Option<i32>,
     pub origin: Option<String>,
     pub desc: Option<String>,
+    pub category: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

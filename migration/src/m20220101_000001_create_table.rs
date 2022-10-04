@@ -65,6 +65,22 @@ impl MigrationTrait for Migration {
                     .to_owned()
             )
             .await?;
+        manager
+            .create_table(
+                Table::create()
+                    .table(SuffixMeaning::Table)
+                    .if_not_exists()
+                    .col(
+                        ColumnDef::new(SuffixMeaning::Id)
+                            .integer()
+                            .not_null()
+                            .auto_increment()
+                            .primary_key()
+                    )
+                    .col(ColumnDef::new(SuffixMeaning::SuffixId).integer().not_null())
+                    .col(ColumnDef::new(SuffixMeaning::Content).string().not_null())
+                    .to_owned()
+            ).await?;
         Ok(())
     }
 
