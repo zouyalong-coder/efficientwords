@@ -1,0 +1,16 @@
+[package]
+name = "error"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "error"
+path = "src/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+lazy_static = "1.4.0"
+sea-orm = { version = "0.9.3", features = ["sqlx-postgres"] }
+serde = { version = "1.0.145", features = ["derive"] }

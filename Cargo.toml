@@ -6,10 +6,18 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [workspace]
-members = [".", "migration", "entity"]
+members = [".", "migration", "entity", "error"]
 
 [dependencies]
 migration = {path="migration"}
 entity = {path="entity"}
+error = {path="error"}
 actix-web = "4.2.1"
+tokio = { version = "1.21.2", features = ["macros", "rt"] }
+async-trait = "0.1.57"
+serde = { version = "1.0.145", features = ["derive"] }
+json = "0.12.4"
+log = "0.4.17"
+sea-orm = { version = "0.9.3", features = ["sqlx-postgres"] }
+lazy_static = "1.4.0"
 # diesel = { version = "2.0.0", features = ["postgres"] }
