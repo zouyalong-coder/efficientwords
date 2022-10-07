@@ -1,4 +1,4 @@
-use actix_web::{get, web, Responder, post, Result, HttpResponse};
+use actix_web::{get, web, Responder, post, Result, HttpResponse, delete};
 use entity::po::{prefix, prefix_meaning};
 use sea_orm::{TransactionTrait, EntityTrait, QueryFilter, QueryOrder, QuerySelect, ColumnTrait};
 use sea_orm::{ActiveValue, ActiveModelTrait};
@@ -83,6 +83,7 @@ struct ListArg {
 
 #[derive(Serialize)]
 struct PrefixInfo<'a> {
+    id: i32,
     sign: String,
     meaning: Vec<String>,
     stem: Option<&'a PrefixInfo<'a>>,
@@ -106,6 +107,7 @@ async fn list_prefix(ctx: web::Data<ApiState>, list_arg: web::Query<ListArg>) ->
     let list: Vec<(prefix::Model, Vec<prefix_meaning::Model>)> = query.all(ctx.db.as_ref()).await?;
     let list: Vec<PrefixInfo<'_>> = list.iter().map(|m| {
         let mut item = PrefixInfo{
+            id: m.0.id,
             sign: m.0.sign.clone(),
             stem: None,
             meaning: vec![],
@@ -116,4 +118,16 @@ async fn list_prefix(ctx: web::Data<ApiState>, list_arg: web::Query<ListArg>) ->
         item
     }).collect();
     Ok(web::Json(ListResp(list)))
+}
+
+#[derive(Deserialize)]
+struct DelPrefix {
+    id: i32,
+}
+
+#[delete("/prefix/delete")]
+async fn delete_prefix(ctx: web::Data<ApiState>, arg: web::Query<DelPrefix>) -> Result<impl Responder, error::Error> {
+    println!("delete prefix: {:?}", &arg.id);
+    prefix::Entity::delete_by_id(arg.id).exec(ctx.db.as_ref()).await?;
+    Ok(web::Json(Response::<u64>::err(error::Error::Ok)))
 }

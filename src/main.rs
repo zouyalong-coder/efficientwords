@@ -20,6 +20,7 @@ async fn main() -> std::io::Result<()> {
             .service(api::greet)
             .service(api::new_prefix)
             .service(api::list_prefix)
+            .service(api::delete_prefix)
             .default_service(web::to(|| HttpResponse::NotFound()))
     })
         .bind(("127.0.0.1", 8080))?
