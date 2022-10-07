@@ -1,1 +1,1 @@
-sea-orm-cli generate entity -o entity/src/po
+sea-orm-cli generate entity -o entity/src/po --expanded-format

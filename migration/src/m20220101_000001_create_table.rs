@@ -21,7 +21,7 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key()   
                     )
-                    .col(ColumnDef::new(Prefix::Sign).string().not_null())
+                    .col(ColumnDef::new(Prefix::Sign).string().not_null().unique_key())
                     .col(ColumnDef::new(Prefix::Stem).integer().null())
                     .col(ColumnDef::new(Prefix::Origin).string().null())
                     .col(ColumnDef::new(Prefix::Desc).string().null())
@@ -44,6 +44,13 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(PrefixMeaning::Content).string().not_null())
                     .to_owned()
             ).await?;
+        manager.create_foreign_key(ForeignKey::create()
+            .from(PrefixMeaning::Table, PrefixMeaning::PrefixId)
+            .to(Prefix::Table, Prefix::Id)
+            .on_delete(ForeignKeyAction::Cascade)
+            .to_owned()
+        ).await?;
+    
 
         manager
             .create_table(
@@ -81,6 +88,12 @@ impl MigrationTrait for Migration {
                     .col(ColumnDef::new(SuffixMeaning::Content).string().not_null())
                     .to_owned()
             ).await?;
+        manager.create_foreign_key(ForeignKey::create()
+            .from(SuffixMeaning::Table, SuffixMeaning::SuffixId)
+            .to(Suffix::Table, Suffix::Id)
+            .on_delete(ForeignKeyAction::Cascade)
+            .to_owned()
+        ).await?;
         Ok(())
     }
 

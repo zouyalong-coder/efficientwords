@@ -9,6 +9,7 @@ pub enum Error {
     ArgError(String),
     /// io error
     IO(std::io::Error),
+    RecordMissing,
     DbError(sea_orm::DbErr),
     /// unknown
     Unknown(String),
@@ -22,6 +23,11 @@ impl Serialize for Error {
                 Self::Ok => {
                     let mut s = serializer.serialize_struct("error", 1)?;
                     s.serialize_field("code", "ok")?;
+                    s.end()
+                },
+                Self::RecordMissing => {
+                    let mut s = serializer.serialize_struct("error", 1)?;
+                    s.serialize_field("code", "not_found")?;
                     s.end()
                 },
                 Self::ArgError(c) => {
@@ -68,7 +74,23 @@ impl From<std::io::Error> for Error {
 
 impl From<sea_orm::DbErr> for Error {
     fn from(e: sea_orm::DbErr) -> Self {
-        Self::DbError(e)
+        match e {
+            sea_orm::DbErr::RecordNotFound(_) => Self::RecordMissing,
+            _ => Self::DbError(e),
+        }
+        
+    }
+}
+
+impl actix_web::ResponseError for Error {
+    fn status_code(&self) -> actix_web::http::StatusCode {
+        use actix_web::http::*;
+        match *self {
+            Self::Ok => StatusCode::OK,
+            Self::ArgError(_) => StatusCode::BAD_REQUEST,
+            Self::RecordMissing => StatusCode::NOT_FOUND,
+            _ => StatusCode::INTERNAL_SERVER_ERROR,
+        }
     }
 }
 

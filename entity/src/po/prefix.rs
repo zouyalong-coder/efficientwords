@@ -2,10 +2,17 @@
 
 use sea_orm::entity::prelude::*;
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
-#[sea_orm(table_name = "prefix")]
+#[derive(Copy, Clone, Default, Debug, DeriveEntity)]
+pub struct Entity;
+
+impl EntityName for Entity {
+    fn table_name(&self) -> &str {
+        "prefix"
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, DeriveModel, DeriveActiveModel)]
 pub struct Model {
-    #[sea_orm(primary_key)]
     pub id: i32,
     pub sign: String,
     pub stem: Option<i32>,
@@ -13,7 +20,57 @@ pub struct Model {
     pub desc: Option<String>,
 }
 
-#[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
-pub enum Relation {}
+#[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
+pub enum Column {
+    Id,
+    Sign,
+    Stem,
+    Origin,
+    Desc,
+}
+
+#[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
+pub enum PrimaryKey {
+    Id,
+}
+
+impl PrimaryKeyTrait for PrimaryKey {
+    type ValueType = i32;
+    fn auto_increment() -> bool {
+        true
+    }
+}
+
+#[derive(Copy, Clone, Debug, EnumIter)]
+pub enum Relation {
+    PrefixMeaning,
+}
+
+impl ColumnTrait for Column {
+    type EntityName = Entity;
+    fn def(&self) -> ColumnDef {
+        match self {
+            Self::Id => ColumnType::Integer.def(),
+            Self::Sign => ColumnType::String(None).def().unique(),
+            Self::Stem => ColumnType::Integer.def().null(),
+            Self::Origin => ColumnType::String(None).def().null(),
+            Self::Desc => ColumnType::String(None).def().null(),
+        }
+    }
+}
+
+impl RelationTrait for Relation {
+    fn def(&self) -> RelationDef {
+        match self {
+            Self::PrefixMeaning => Entity::has_many(super::prefix_meaning::Entity).into(),
+        }
+    }
+}
+
+impl Related<super::prefix_meaning::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::PrefixMeaning.def()
+    }
+}
 
 impl ActiveModelBehavior for ActiveModel {}
