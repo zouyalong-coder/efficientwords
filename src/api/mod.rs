@@ -1,6 +1,9 @@
 mod prefix;
+mod suffix;
 
+use actix_web::Result;
 pub use prefix::*;
+pub use suffix::*;
 
 use serde::{Serialize};
 use std::sync::Arc;
@@ -16,6 +19,10 @@ impl<T> Response<T> {
         Self { error: error::Error::Ok, data: Some(data) }
     }
 
+    fn none() -> Self {
+        Self { error: error::Error::Ok, data: None }
+    }
+
     fn err(err: error::Error) -> Self {
         Self{error: err, data: None}
     }
@@ -25,3 +32,5 @@ impl<T> Response<T> {
 pub struct ApiState {
     pub db: Arc<sea_orm::DatabaseConnection>,
 }
+
+type HttpResult<T> = Result<T, error::Error>;

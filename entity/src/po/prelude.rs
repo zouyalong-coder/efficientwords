@@ -3,4 +3,5 @@
 pub use super::prefix::Entity as Prefix;
 pub use super::prefix_meaning::Entity as PrefixMeaning;
 pub use super::suffix::Entity as Suffix;
+pub use super::suffix_category::Entity as SuffixCategory;
 pub use super::suffix_meaning::Entity as SuffixMeaning;

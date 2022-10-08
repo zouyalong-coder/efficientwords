@@ -1,5 +1,4 @@
-use sea_orm_migration::{prelude::*, sea_orm::{EnumIter, DeriveActiveEnum}};
-use sea_orm;
+use sea_orm_migration::{prelude::*};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
@@ -8,7 +7,6 @@ pub struct Migration;
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         // Replace the sample below with your own migration scripts
-        // todo!();
         manager
             .create_table(
                 Table::create()
@@ -51,6 +49,22 @@ impl MigrationTrait for Migration {
             .to_owned()
         ).await?;
     
+        manager
+            .create_table(
+                Table::create()
+                    .table(SuffixCategory::Table)
+                    .if_not_exists()
+                    .col(
+                        ColumnDef::new(SuffixCategory::Id)
+                            .integer()
+                            .not_null()
+                            .auto_increment()
+                            .primary_key()
+                    )
+                    .col(ColumnDef::new(SuffixCategory::Text).string().not_null().unique_key())
+                    .col(ColumnDef::new(SuffixCategory::Detail).string().not_null())
+                    .to_owned()
+            ).await?;
 
         manager
             .create_table(
@@ -72,6 +86,13 @@ impl MigrationTrait for Migration {
                     .to_owned()
             )
             .await?;
+        manager.create_foreign_key(
+            ForeignKey::create()
+                .from(Suffix::Table, Suffix::Category)
+                .to(SuffixCategory::Table, SuffixCategory::Id)
+                .on_delete(ForeignKeyAction::Cascade)
+                .to_owned()
+        ).await?;
         manager
             .create_table(
                 Table::create()
@@ -99,8 +120,6 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         // Replace the sample below with your own migration scripts
-        // todo!();
-
         manager.drop_table(Table::drop().table(Prefix::Table).to_owned()).await?;
         manager.drop_table(Table::drop().table(PrefixMeaning::Table).to_owned()).await?;
         Ok(())
@@ -128,13 +147,6 @@ pub enum PrefixMeaning {
     Content,
 }
 
-#[derive(EnumIter, DeriveActiveEnum)]
-#[sea_orm(rs_type = "i32", db_type = "Integer")]
-pub enum SuffixCategory {
-    Noun = 0,
-    Verb = 1,
-}
-
 #[derive(Iden)]
 pub enum Suffix {
     Table,
@@ -154,4 +166,14 @@ pub enum SuffixMeaning {
     SuffixId,
     ///
     Content,
+}
+
+#[derive(Iden)]
+pub enum SuffixCategory {
+    Table,
+    Id,
+    /// category
+    Text,
+    /// 
+    Detail,
 }

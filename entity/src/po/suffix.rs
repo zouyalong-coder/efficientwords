@@ -45,6 +45,7 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
+    SuffixCategory,
     SuffixMeaning,
 }
 
@@ -65,8 +66,18 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
+            Self::SuffixCategory => Entity::belongs_to(super::suffix_category::Entity)
+                .from(Column::Category)
+                .to(super::suffix_category::Column::Id)
+                .into(),
             Self::SuffixMeaning => Entity::has_many(super::suffix_meaning::Entity).into(),
         }
+    }
+}
+
+impl Related<super::suffix_category::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::SuffixCategory.def()
     }
 }
 

@@ -5,4 +5,5 @@ pub mod prelude;
 pub mod prefix;
 pub mod prefix_meaning;
 pub mod suffix;
+pub mod suffix_category;
 pub mod suffix_meaning;
