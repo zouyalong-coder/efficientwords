@@ -1,29 +1,31 @@
-import { Col, Form, Input, Row, Button } from "antd";
+import { Button, Col, Form, Input, Row } from "antd";
 
 
 interface ISearchPanelProps {
-    onSearch: (keyword: string) => boolean,
+    onKeyword: (keyword: string) => boolean,
     width?: number,
 }
 
 function SearchPanel(props: ISearchPanelProps) {
     const [form] = Form.useForm();
-    const onFinish = (values: {keyword: string}) => {
-        const clearForm = props.onSearch(values.keyword) || false;
-        clearForm && form.resetFields();
+    // const [keyword, setKeyword] = useState("")
+    // const searchResult = useSearch(props.queryUrl, keyword, { test: 1 })
+    // props.onSearchResult(keyword, searchResult)
+    const onFinish = (value: { keyword: string }) => {
+        value.keyword !== "" && props.onKeyword(value.keyword)
     }
 
     return (
         <div>
             <div> current width: {props.width} </div>
-            <Form form={form} initialValues={{remember: true}} onFinish={onFinish}>
+            <Form form={form} initialValues={{ remember: true }} onFinish={onFinish}>
                 <Row>
                     <Col span={5}></Col>
                     <Col span={10}>
                         <Form.Item
                             name="keyword"
-                            rules={[{required: true, message: 'pls input the keyword'}]}
-                            >
+                            rules={[{ required: true, message: 'pls input the keyword' }]}
+                        >
                             <Input />
                         </Form.Item>
                     </Col>
@@ -32,7 +34,7 @@ function SearchPanel(props: ISearchPanelProps) {
                             <Button type="primary" htmlType="submit">
                                 Search
                             </Button>
-                        </Form.Item> 
+                        </Form.Item>
                     </Col>
                     <Col span={4}></Col>
                 </Row>
