@@ -3,7 +3,8 @@ import reactLogo from './assets/react.svg'
 import './App.css'
 import { ConfigProvider, Layout, Menu, MenuProps } from 'antd'
 import 'antd/dist/antd.css'
-import {default as PrefixPage} from "./console_prefix"
+import {default as PrefixPage} from "./components/console_prefix"
+import { SessionContext } from './session_ctx'
 
 const {Header, Sider, Content} = Layout;
 
@@ -42,7 +43,7 @@ function App() {
   };
 
   return (
-    <div>
+    <SessionContext.Provider value={{}}>
       <ConfigProvider>
         <Layout>
           <Header>
@@ -52,31 +53,8 @@ function App() {
             {currentPage(current)}
           </Layout>
         </Layout>
-        {/* <div className="App"> */}
-          {/* <Menu items={items} /> */}
-          {/* <div>
-            <a href="https://vitejs.dev" target="_blank">
-              <img src="/vite.svg" className="logo" alt="Vite logo" />
-            </a>
-            <a href="https://reactjs.org" target="_blank">
-              <img src={reactLogo} className="logo react" alt="React logo" />
-            </a>
-          </div>
-          <h1>Vite + React</h1>
-          <div className="card">
-            <button onClick={() => setCount((count) => count + 1)}>
-              count is {count}
-            </button>
-            <p>
-              Edit <code>src/App.tsx</code> and save to test HMR
-            </p>
-          </div>
-          <p className="read-the-docs">
-            Click on the Vite and React logos to learn more
-          </p> */}
-        {/* </div> */}
       </ConfigProvider>
-    </div>
+    </SessionContext.Provider>
 
   )
 }
