@@ -17,7 +17,6 @@ function SearchPanel(props: ISearchPanelProps) {
 
     return (
         <div>
-            <div> current width: {props.width} </div>
             <Form form={form} initialValues={{ remember: true }} onFinish={onFinish}>
                 <Row>
                     <Col span={5}></Col>
