@@ -3,8 +3,16 @@ import { Button, Form, Input } from "antd";
 import API from '../helper/api';
 import { post } from '../helper/server/general';
 
+export interface Prefix {
+    id: number,
+    defaultSpell: string,
+    origin?: string,
+    spells?: string[],
+    meanings: string[],
+}
 
-export default function AddPrefix(props: {
+export default function ModifyPrefix(props: {
+    data: Prefix | null,
     onSubmit: (data: Prefix) => void
 }) {
     const formItemLayout = {
@@ -25,7 +33,7 @@ export default function AddPrefix(props: {
     };
 
     const onFinish = (values) => {
-        post(API.PREFIX_ADD, undefined, values)
+        post(API.PREFIX_MODIFY, undefined, values)
             .then((r) => {
                 console.log("Got result: ", r)
                 props.onSubmit(values)
@@ -45,21 +53,24 @@ export default function AddPrefix(props: {
     const initVal = {
         spells: [],
         meanings: [],
+        a: ["saf"]
     }
+    console.log("initialValues: ", { ...initVal, ...props.data })
     return <>
         <Form
             {...formItemLayoutWithOutLabel}
             onFinish={onFinish} autoComplete="off"
             onFinishFailed={onFinishFailed}
-            initialValues={initVal}
+            initialValues={{ ...initVal, ...props.data }}
         >
-            <Form.Item label="主拼写" name="defaultSpell" required={true}><Input /></Form.Item>
-            <Form.Item label="起源" name="origin" required={false}><Input /></Form.Item>
+            <Form.Item label="id" name="id"><Input readOnly={true} /></Form.Item>
+            <Form.Item label="主拼写" name="defaultSpell"><Input /></Form.Item>
+            <Form.Item label="起源" name="origin"><Input /></Form.Item>
             <Form.List name="spells">
                 {
-                    (spells, { add, remove }, { errors }) => <>
+                    (fields, { add, remove }, { errors }) => <>
                         {
-                            spells.map((spell, index) => {
+                            fields.map((spell, index) => {
                                 console.log("current spell: ", spell, index)
                                 return <Form.Item label={index === 0 ? "spells" : ""}
                                     {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}

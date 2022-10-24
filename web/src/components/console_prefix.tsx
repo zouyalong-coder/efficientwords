@@ -1,19 +1,12 @@
-import { Col, Row } from "antd";
-import { useState } from "react";
-import useSearch from "../hooks/search";
-import AddPrefix from "./add_prefix";
-import SearchPanel from "./search";
-import SearchPrefixPanel from "./search_prefix";
-
-
-
+import ManagePrefix from "./prefix_manage";
 
 
 function Page() {
     return (
         <div>
-            <SearchPrefixPanel />
-            <AddPrefix></AddPrefix>
+            <ManagePrefix></ManagePrefix>
+            {/* <SearchPrefixPanel /> */}
+            {/* <AddPrefix></AddPrefix> */}
         </div>
     )
 }

@@ -40,30 +40,3 @@ export default async function getJsonData(url: string, params?: {} | undefined):
         .then((resp) => resp.json())
 }
 
-// export default function useGetJsonDataFromServer(url: string, params?: {} | undefined): {} | null {
-//     if (!url.startsWith('http')) {
-//         url = serverHost + url
-//     }
-//     if (typeof params !== "undefined") {
-//         const query = (new URLSearchParams(params)).toString()
-//         if (query.length > 0) {
-//             url += "?" + query
-//         }
-//     }
-//     console.log("url: ", url)
-//     const [data, setData] = useState(null)
-//     useEffect(() => {
-//         let ignore = false // local variable.
-//         fetch(url)
-//             .then((resp) => resp.json())
-//             .then(json => {
-//                 if (!ignore) {
-//                     setData(json)
-//                 }
-//             })
-//         return () => {
-//             ignore = true
-//         }
-//     }, [url])
-//     return data
-// }
