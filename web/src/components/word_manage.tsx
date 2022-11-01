@@ -1,17 +1,22 @@
 import { Button, Modal, Table, Tag, Typography } from "antd";
 import { useState } from "react";
-import AddPrefix from "./prefix_add";
-import ModifyPrefix from "./prefix_modify";
+import AddWord from "./word_add";
+import ModifyWord from "./word_modify";
 
-interface PrefixRow {
-    // key: React.Key,
+interface PartOfSpeech {
+    type: number,
+    desc?: string,
+}
+
+interface WordRow {
     id: number,
     defaultSpell: string,
     spells?: string[],
     meanings: string[],
+    partOfSpeech?: PartOfSpeech[],
 }
 
-const PrefixTable = (props: { data: PrefixRow[], onModify?: (idx: number, newData: any) => void }) => {
+const WordTable = (props: { data: WordRow[], onModify?: (idx: number, newData: any) => void }) => {
     const [modifying, setModifying] = useState({
         modifying: false,
         data: null,
@@ -19,9 +24,9 @@ const PrefixTable = (props: { data: PrefixRow[], onModify?: (idx: number, newDat
     const [adding, setAdding] = useState(
         false
     )
-    const prefixModified = (newData) => {
+    const wordModified = (newData) => {
         console.log("modified: ", newData)
-        const idx = props.data.findIndex((val: PrefixRow, index: number) => {
+        const idx = props.data.findIndex((val: WordRow, index: number) => {
             console.log("current: ", index, val)
             if (val.id === newData.id) {
                 return true;
@@ -30,10 +35,10 @@ const PrefixTable = (props: { data: PrefixRow[], onModify?: (idx: number, newDat
         })
         props.onModify && props.onModify(idx, newData)
     }
-    const prefixAdded = (newData) => {
+    const wordAdded = (newData) => {
         console.log("added: ", newData)
     }
-    const edit = (record: PrefixRow) => {
+    const edit = (record: WordRow) => {
         console.log("edit record:", record)
         setModifying({
             modifying: true,
@@ -73,7 +78,7 @@ const PrefixTable = (props: { data: PrefixRow[], onModify?: (idx: number, newDat
         {
             dataIndex: "operation",
             title: "operation",
-            render: (_: any, record: PrefixRow) => (
+            render: (_: any, record: WordRow) => (
                 <Typography.Link onClick={() => edit(record)}>
                     Edit
                 </Typography.Link>
@@ -87,43 +92,40 @@ const PrefixTable = (props: { data: PrefixRow[], onModify?: (idx: number, newDat
     }
     return (
         <>
-            <Table<PrefixRow> dataSource={props.data} columns={columns}
+            <Table<WordRow> dataSource={props.data} columns={columns}
                 rowKey="id"
                 expandable={{
                     expandedRowRender: expandRecord,
                 }}>
             </Table>
-            <Button onClick={() => setAdding(true)}>add prefix</Button>
+            <Button onClick={() => setAdding(true)}>add word</Button>
             <Modal open={modifying.modifying} onCancel={() => setModifying({ modifying: false, data: null })}
                 footer={[]}>
-                <ModifyPrefix data={modifying.data} onSubmit={prefixModified}></ModifyPrefix>
+                <ModifyWord data={modifying.data} onSubmit={wordModified}></ModifyWord>
             </Modal>
             <Modal open={adding} onCancel={() => setAdding(false)}
                 footer={[]}>
-                <AddPrefix onSubmit={prefixAdded}></AddPrefix>
+                <AddWord onSubmit={wordAdded}></AddWord>
             </Modal>
         </>
     )
 }
 
-interface ManagePrefixProps {
+interface ManageWordProps {
 
 }
 
-export default function ManagePrefix(props: ManagePrefixProps) {
+export default function ManageWord(props: ManageWordProps) {
     // const currentList = useQuery(API.PREFIX_LIST)
-    const currentList: PrefixRow[] = [
+    const currentList: WordRow[] = [
         {
             id: 1,
-            defaultSpell: "non",
-            spells: ["un"],
-            meanings: ["取反", "d"]
-        },
-        {
-            id: 2,
-            defaultSpell: "a--",
+            defaultSpell: "ion",
             spells: [],
-            meanings: ["加强语气"]
+            meanings: ["行为结果"],
+            partOfSpeech: [{
+                type: 1, // noun
+            },],
         },
     ]
     const onModify = (idx: number, data: any) => {
@@ -131,7 +133,6 @@ export default function ManagePrefix(props: ManagePrefixProps) {
         console.log("data: ", data)
     }
     return (
-        <PrefixTable data={currentList} onModify={onModify}></PrefixTable>
-
+        <WordTable data={currentList} onModify={onModify}></WordTable>
     )
 }

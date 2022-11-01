@@ -1,4 +1,4 @@
-import ManageSuffix from "./suffix_manage";
+import ManageSuffix from "./stem_manage";
 
 
 function Page() {

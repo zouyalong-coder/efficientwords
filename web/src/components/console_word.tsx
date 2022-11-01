@@ -1,10 +1,10 @@
-import ManageSuffix from "./suffix_manage";
+import ManageWord from "./word_manage";
 
 
 function Page() {
     return (
         <div>
-            <ManageSuffix></ManageSuffix>
+            <ManageWord></ManageWord>
             {/* <SearchSuffixPanel /> */}
             {/* <AddSuffix></AddSuffix> */}
         </div>

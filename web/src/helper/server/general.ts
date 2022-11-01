@@ -26,9 +26,9 @@ export async function post(url: string, query?: {} | undefined, body?: any | und
     // } = args;
     url = uniformUrl(url, query)
     console.log("post: ", url, body, headers)
-    return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(mockPost(url)), 100)
-    })
+    // return new Promise((resolve, reject) => {
+    //     setTimeout(() => resolve(mockPost(url)), 100)
+    // })
     return await axios.post(url, body).then(res => res.data)
 }
 

@@ -1,7 +1,7 @@
 import { Button, Modal, Table, Tag, Typography } from "antd";
 import { useState } from "react";
-import AddPrefix from "./add_prefix";
-import ModifyPrefix from "./modify_prefix";
+import AddSuffix from "./suffix_add";
+import ModifySuffix from "./suffix_modify";
 
 interface PartOfSpeech {
     type: number,
@@ -24,7 +24,7 @@ const SuffixTable = (props: { data: SuffixRow[], onModify?: (idx: number, newDat
     const [adding, setAdding] = useState(
         false
     )
-    const prefixModified = (newData) => {
+    const suffixModified = (newData) => {
         console.log("modified: ", newData)
         const idx = props.data.findIndex((val: SuffixRow, index: number) => {
             console.log("current: ", index, val)
@@ -35,7 +35,7 @@ const SuffixTable = (props: { data: SuffixRow[], onModify?: (idx: number, newDat
         })
         props.onModify && props.onModify(idx, newData)
     }
-    const prefixAdded = (newData) => {
+    const suffixAdded = (newData) => {
         console.log("added: ", newData)
     }
     const edit = (record: SuffixRow) => {
@@ -78,7 +78,7 @@ const SuffixTable = (props: { data: SuffixRow[], onModify?: (idx: number, newDat
         {
             dataIndex: "operation",
             title: "operation",
-            render: (_: any, record: PrefixRow) => (
+            render: (_: any, record: SuffixRow) => (
                 <Typography.Link onClick={() => edit(record)}>
                     Edit
                 </Typography.Link>
@@ -98,14 +98,14 @@ const SuffixTable = (props: { data: SuffixRow[], onModify?: (idx: number, newDat
                     expandedRowRender: expandRecord,
                 }}>
             </Table>
-            <Button onClick={() => setAdding(true)}>add prefix</Button>
+            <Button onClick={() => setAdding(true)}>add suffix</Button>
             <Modal open={modifying.modifying} onCancel={() => setModifying({ modifying: false, data: null })}
                 footer={[]}>
-                <ModifyPrefix data={modifying.data} onSubmit={prefixModified}></ModifyPrefix>
+                <ModifySuffix data={modifying.data} onSubmit={suffixModified}></ModifySuffix>
             </Modal>
             <Modal open={adding} onCancel={() => setAdding(false)}
                 footer={[]}>
-                <AddPrefix onSubmit={prefixAdded}></AddPrefix>
+                <AddSuffix onSubmit={suffixAdded}></AddSuffix>
             </Modal>
         </>
     )
